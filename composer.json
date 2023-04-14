@@ -1,0 +1,15 @@
+{
+    "name": "wladimir/simple-lsp-server",
+    "autoload": {
+        "psr-4": {
+            "Wladimir\\SimpleLspServer\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Wladimir",
+            "email": "Sobolev.Wladim@yandex.ru"
+        }
+    ],
+    "require": {}
+}
