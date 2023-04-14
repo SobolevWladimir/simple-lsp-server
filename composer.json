@@ -2,7 +2,7 @@
     "name": "wladimir/simple-lsp-server",
     "autoload": {
         "psr-4": {
-            "Wladimir\\SimpleLspServer\\": "src/"
+            "SimpleLspServer\\": "src/"
         }
     },
     "authors": [
