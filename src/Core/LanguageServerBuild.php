@@ -16,14 +16,9 @@ final class LanguageServerBuild
     private $logger;
 
     /**
-     * @var string|null
+     * @var Router
      */
-    private $tcpAddress = null;
-
-    /**
-     * @var DispatcherFactory
-     */
-    private $dispatcherFactory;
+    private $router;
 
     /**
      * @var ServerStats|null
@@ -31,76 +26,30 @@ final class LanguageServerBuild
     private $stats = null;
 
     private function __construct(
-        DispatcherFactory $dispatcherFactory,
+        Router $router,
         LoggerInterface $logger
     ) {
         $this->logger = $logger;
-        $this->dispatcherFactory = $dispatcherFactory;
+        $this->router = $router;
     }
 
     /**
      * Create a new instance of the builder \o/
      */
     public static function create(
-        DispatcherFactory $dispatcherFactory,
+        Router $router,
         LoggerInterface $logger = null
     ): self {
         return new self(
-            $dispatcherFactory,
+            $router,
             $logger ?: new NullLogger()
         );
     }
 
-    /**
-     * Start a TCP server on the given address.
-     *
-     * The TCP server can handle multiple connections/sessions, but must be
-     * started manually before clients can connect to it.
-     *
-     * The TCP server is valuable for development and for debugging as it echos
-     * the debug information to STDERR.
-     *
-     * Note that the default behavior is to start a STDIO server.
-     */
-    public function tcpServer(?string $address = '0.0.0.0:0'): self
-    {
-        $this->tcpAddress = $address;
 
-        return $this;
-    }
 
-    /**
-     * Return a language server tester based on the current dispatcher.
-     *
-     * This is useful for integration testing scenarios.
-     */
-    public function tester(?InitializeParams $params = null): LanguageServerTester
-    {
-        $params = $params ?: new InitializeParams(new ClientCapabilities());
-        return new LanguageServerTester($this->dispatcherFactory, $params);
-    }
-
-    public function withServerStats(ServerStats $stats): self
-    {
-        $this->stats = $stats;
-
-        return $this;
-    }
-
-    /**
-     * Build the language server.
-     *
-     * The returned language server instance can then be started by calling
-     * start().
-     */
     public function build(): LanguageServer
     {
-        if ($this->tcpAddress) {
-            $provider = new SocketStreamProvider(
-                \Amp\Socket\listen($this->tcpAddress),
-                $this->logger
-            );
-        } else {
             $provider = new ResourceStreamProvider(
                 new ResourceDuplexStream(
                     new ResourceInputStream(STDIN),
@@ -108,7 +57,6 @@ final class LanguageServerBuild
                 ),
                 $this->logger
             );
-        }
 
         return new LanguageServer(
             $this->dispatcherFactory,
