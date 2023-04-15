@@ -5,6 +5,7 @@ namespace SimpleLspServer\StreamProvider;
 use Amp\Promise;
 use Amp\Success;
 use Psr\Log\LoggerInterface;
+use SimpleLspServer\Stream\ResourceDuplexStream;
 
 final class ResouceStreamProvider implements StreamProvider
 {
