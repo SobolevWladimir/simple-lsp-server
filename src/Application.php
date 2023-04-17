@@ -2,12 +2,24 @@
 
 namespace SimpleLspServer;
 
-use Symfony\Component\Console\Application as SymfonyApplication;
+use Amp\ByteStream\ReadableResourceStream;
+use Amp\ByteStream\WritableResourceStream;
 
-class Application extends SymfonyApplication
+
+class Application
 {
-    public function __construct()
+    public function run(): void
     {
-        parent::__construct('SimpleLspServer','1.0.0');
+        $input = new ReadableResourceStream(STDIN);
+        $output  = new WritableResourceStream(STDOUT);
+
+
+        while (($chunk = $input->read()) !== null) {
+          //$output->write("Вы написали: ".$chunk);
+        }
     }
+  public function log(string $text) {
+
+  }
+
 }

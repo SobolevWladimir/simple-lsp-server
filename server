@@ -1,31 +1,18 @@
 #!/usr/bin/env php
 <?php
-use Symfony\Component\Console\Output\ConsoleOutput;
 use SimpleLspServer\Application;
 
 
-foreach ([
-    __DIR__ . '/../../../autoload.php',
-    __DIR__ . '/../vendor/autoload.php'
-] as $file) {
-    if (file_exists($file)) {
-        $autoloadFile = $file;
-        break;
-    }
-}
+require_once __DIR__ . '/vendor/autoload.php';
 
 ini_set('display_errors', 'stderr');
 
-require_once $autoloadFile;
-
-
-
 $application  = new Application();
-$output = new ConsoleOutput();
 
 try {
-    $application->run(null, $output);
+    $application->run();
 } catch (Exception $e) {
+  echo "fattal errro";
     //$application->renderException($e, $output);
     exit(255);
 }
