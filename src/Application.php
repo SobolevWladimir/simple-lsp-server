@@ -3,23 +3,19 @@
 namespace SimpleLspServer;
 
 use Amp\ByteStream\ReadableResourceStream;
-use Amp\ByteStream\WritableResourceStream;
-
 
 class Application
 {
     public function run(): void
     {
-        $input = new ReadableResourceStream(STDIN);
-        $output  = new WritableResourceStream(STDOUT);
-
-
+       $input = new ReadableResourceStream(STDIN);
         while (($chunk = $input->read()) !== null) {
-          //$output->write("Вы написали: ".$chunk);
+            $this->log($chunk);
         }
     }
-  public function log(string $text) {
-
-  }
-
+    public function log(string $text):void
+    {
+        $file  = "~/lsp_test.txt";
+        file_put_contents($file, $text, FILE_APPEND);
+    }
 }
