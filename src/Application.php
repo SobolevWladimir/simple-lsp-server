@@ -13,6 +13,7 @@ class Application
             $this->log($chunk);
         }
     }
+
     public function log(string $text):void
     {
         $file  = "~/lsp_test.txt";
