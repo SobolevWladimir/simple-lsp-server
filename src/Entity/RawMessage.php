@@ -2,8 +2,7 @@
 
 namespace SimpleLspServer\Entity;
 
-use RequestMessage;
-use SimpleLspServer\Entity\RequestMessage as EntityRequestMessage;
+use SimpleLspServer\Entity\RequestMessage;
 
 class RawMessage
 {

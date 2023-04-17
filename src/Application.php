@@ -14,7 +14,8 @@ class Application
             $reader  = new LspMessageReader($chunk);
             $message = $reader->parse();
             if (null != $message) {
-                $this->logBody($message->body());
+              
+                $this->logBody($message->toRequestMessage()->method);
             }
             $this->log($chunk);
         }
@@ -27,7 +28,7 @@ class Application
         file_put_contents($file, "\n\r -------- \n\r", FILE_APPEND);
     }
 
-    public function logBody(array $body): void
+    public function logBody($body): void
     {
         $text = json_encode($body);
         $file  = "/home/wladimir/lsp_body_test.txt";
