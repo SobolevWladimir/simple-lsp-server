@@ -1,8 +1,9 @@
-<?php 
+<?php
+
 namespace SimpleLspServer\Entity;
 
-
-class RequestMessage {
+class RequestMessage extends Message
+{
       /**
      * @var string|int
      */
@@ -40,6 +41,4 @@ class RequestMessage {
             'params' => $this->params,
         ];
     }
-
-
 }
