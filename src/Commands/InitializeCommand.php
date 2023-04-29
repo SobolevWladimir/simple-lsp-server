@@ -8,7 +8,10 @@ class InitializeCommand implements CommandInterface
 {
     public function execute(array $param): ResponseMessage
     {
-        $message  = new ResponseMessage(1, []);
+        $jsonText = file_get_contents(__DIR__ . '/files/init.json');
+        $json = json_decode($jsonText);
+
+        $message  = new ResponseMessage(1, $json);
         return $message;
     }
 }

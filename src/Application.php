@@ -12,9 +12,16 @@ use SimpleLspServer\Transmitter\LspMessageFormatter;
 
 class Application
 {
-    public ReadableResourceStream $input = new ReadableResourceStream(STDIN);
-    public WritableResourceStream $output  = new WritableResourceStream(STDOUT);
-    public LspMessageFormatter $fomatter  = new LspMessageFormatter();
+    public ReadableResourceStream $input ;
+    public WritableResourceStream $output ;
+    public LspMessageFormatter $fomatter ;
+
+    public function __construct()
+    {
+        $this->input = new ReadableResourceStream(STDIN);
+        $this->output = new WritableResourceStream(STDOUT);
+        $this->fomatter = new LspMessageFormatter();
+    }
 
     public function run(): void
     {
@@ -26,9 +33,10 @@ class Application
                 $requestMessage  = $message->toRequestMessage();
                 $command  = $this->route($requestMessage);
                 if ($command !== null) {
+                    $this->log($chunk, 'input');
                     $this->sendMessage($command->execute($requestMessage->params));
                 } else {
-                    $this->log($chunk);
+                    $this->log($chunk, 'not-anwer');
                 }
             }
         }
@@ -36,20 +44,21 @@ class Application
 
     private function route(RequestMessage $message): ?CommandInterface
     {
-
         return null;
     }
 
     private function sendMessage(Message $message): void
     {
         $responseBody  = $this->fomatter->format($message);
+        $this->log($responseBody, 'output');
         $this->output->write($responseBody);
     }
 
-    public function log(string $text): void
+    public function log(string $text, string $type): void
     {
         $file  = "/home/wladimir/lsp_test.txt";
+        file_put_contents($file, "\n\r --$type-- \n\r", FILE_APPEND);
         file_put_contents($file, $text, FILE_APPEND);
-        file_put_contents($file, "\n\r -------- \n\r", FILE_APPEND);
+        file_put_contents($file, "\n\r -- end $type -- \n\r", FILE_APPEND);
     }
 }
