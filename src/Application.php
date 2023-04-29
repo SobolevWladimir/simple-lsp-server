@@ -5,6 +5,8 @@ namespace SimpleLspServer;
 use Amp\ByteStream\ReadableResourceStream;
 use Amp\ByteStream\WritableResourceStream;
 use SimpleLspServer\Commands\CommandInterface;
+use SimpleLspServer\Commands\InitializeCommand;
+use SimpleLspServer\Commands\InitializedCommand;
 use SimpleLspServer\Entity\Message;
 use SimpleLspServer\Entity\RequestMessage;
 use SimpleLspServer\Parser\LspMessageReader;
@@ -15,6 +17,11 @@ class Application
     public ReadableResourceStream $input ;
     public WritableResourceStream $output ;
     public LspMessageFormatter $fomatter ;
+
+    public array $commands  = [
+    'initialize' => InitializeCommand::class,
+    'initialized' => InitializedCommand::class,
+    ];
 
     public function __construct()
     {
@@ -27,23 +34,38 @@ class Application
     {
 
         while (($chunk = $this->input->read()) !== null) {
-            $reader  = new LspMessageReader($chunk);
-            $message = $reader->parse();
-            if (null != $message) {
-                $requestMessage  = $message->toRequestMessage();
-                $command  = $this->route($requestMessage);
-                if ($command !== null) {
-                    $this->log($chunk, 'input');
-                    $this->sendMessage($command->execute($requestMessage->params));
-                } else {
-                    $this->log($chunk, 'not-anwer');
-                }
+            try {
+                $this->handlingMessaage($chunk);
+            } catch (\Throwable $e) {
+                $this->log($e->getMessage(), 'error');
+            }
+        }
+    }
+
+    private function handlingMessaage(string $chunk): void
+    {
+        $reader  = new LspMessageReader($chunk);
+        $message = $reader->parse();
+        if (null != $message) {
+            $requestMessage  = $message->toRequestMessage();
+            $command  = $this->route($requestMessage);
+            if ($command !== null) {
+                $this->log($chunk, 'input');
+                $this->sendMessage($command->execute($requestMessage->params));
+            } else {
+                $this->log($chunk, 'not-anwer');
             }
         }
     }
 
     private function route(RequestMessage $message): ?CommandInterface
     {
+        $method  = $message->method;
+        if (array_key_exists($method, $this->commands)) {
+            $className  = $this->commands[$method];
+             return new $className();
+        }
+
         return null;
     }
 

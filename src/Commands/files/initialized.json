@@ -1,0 +1,8 @@
+{
+  "jsonrpc": "2.0",
+  "id": "5d3db0e4-29e6-44c6-b1e6-016243dd44bc",
+  "method": "window\/workDoneProgress\/create",
+  "params": {
+    "token": "ddb1a990-afff-409d-b7c5-8be90bcb43a5"
+  }
+}
