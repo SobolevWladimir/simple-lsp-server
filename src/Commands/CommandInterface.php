@@ -6,5 +6,5 @@ use SimpleLspServer\Entity\ResponseMessage;
 
 interface CommandInterface
 {
-    public function execute(array $param): ResponseMessage;
+    public function execute(array $param): array;
 }

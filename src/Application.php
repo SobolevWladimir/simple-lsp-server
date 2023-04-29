@@ -7,16 +7,13 @@ use Amp\ByteStream\WritableResourceStream;
 use SimpleLspServer\Commands\CommandInterface;
 use SimpleLspServer\Commands\InitializeCommand;
 use SimpleLspServer\Commands\InitializedCommand;
-use SimpleLspServer\Entity\Message;
 use SimpleLspServer\Entity\RequestMessage;
 use SimpleLspServer\Parser\LspMessageReader;
-use SimpleLspServer\Transmitter\LspMessageFormatter;
 
 class Application
 {
     public ReadableResourceStream $input ;
     public WritableResourceStream $output ;
-    public LspMessageFormatter $fomatter ;
 
     public array $commands  = [
     'initialize' => InitializeCommand::class,
@@ -27,7 +24,6 @@ class Application
     {
         $this->input = new ReadableResourceStream(STDIN);
         $this->output = new WritableResourceStream(STDOUT);
-        $this->fomatter = new LspMessageFormatter();
     }
 
     public function run(): void
@@ -69,11 +65,27 @@ class Application
         return null;
     }
 
-    private function sendMessage(Message $message): void
+    private function sendMessage(array $message): void
     {
-        $responseBody  = $this->fomatter->format($message);
+        $responseBody  = $this->format($message);
         $this->log($responseBody, 'output');
         $this->output->write($responseBody);
+    }
+
+    public function format(array $message): string
+    {
+        $body = json_encode($message);
+
+        $headers = [
+          'Content-Type: application/vscode-jsonrpc; charset=utf8',
+          'Content-Length: ' . strlen($body),
+        ];
+
+        return implode('', [
+          implode("\r\n", $headers),
+          "\r\n\r\n",
+          $body
+        ]);
     }
 
     public function log(string $text, string $type): void
