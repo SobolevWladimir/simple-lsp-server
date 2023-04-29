@@ -7,6 +7,7 @@ use Amp\ByteStream\WritableResourceStream;
 use SimpleLspServer\Commands\CommandInterface;
 use SimpleLspServer\Commands\InitializeCommand;
 use SimpleLspServer\Commands\InitializedCommand;
+use SimpleLspServer\Commands\ProgressCommand;
 use SimpleLspServer\Entity\RequestMessage;
 use SimpleLspServer\Parser\LspMessageReader;
 
@@ -28,13 +29,18 @@ class Application
 
     public function run(): void
     {
-
-        while (($chunk = $this->input->read()) !== null) {
-            try {
-                $this->handlingMessaage($chunk);
-            } catch (\Throwable $e) {
-                $this->log($e->getMessage(), 'error');
+        try {
+            while (($chunk = $this->input->read()) !== null) {
+                try {
+                    $this->handlingMessaage($chunk);
+                } catch (\Throwable $e) {
+                    $this->log($e->getMessage(), 'error');
+                    $this->log($chunk, 'error input',);
+                }
             }
+        } catch (\Throwable $e) {
+                    $this->log($e->getMessage(), 'total error');
+                    $this->log($chunk, 'error input',);
         }
     }
 
@@ -57,6 +63,13 @@ class Application
     private function route(RequestMessage $message): ?CommandInterface
     {
         $method  = $message->method;
+        if ($method == 'shutdown') {
+            exit();
+        }
+        if ($method === "") {
+            return new ProgressCommand();
+        }
+
         if (array_key_exists($method, $this->commands)) {
             $className  = $this->commands[$method];
              return new $className();

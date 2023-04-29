@@ -2,13 +2,12 @@
 
 namespace SimpleLspServer\Commands;
 
-class InitializeCommand implements CommandInterface
+class ProgressCommand implements CommandInterface
 {
     public function execute(?array $param): array
     {
-        $jsonText = file_get_contents(__DIR__ . '/files/init.json');
+        $jsonText = file_get_contents(__DIR__ . '/files/progress.json');
         $json = json_decode($jsonText, true);
-
         return $json;
     }
 }

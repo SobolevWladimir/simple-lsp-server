@@ -37,7 +37,7 @@ class RawMessage
     public function toRequestMessage(): RequestMessage
     {
         $id = $this->body['id'];
-        $method = $this->body['method'];
+        $method = $this->body['method'] ?? "";
         $param = $this->body['params'];
         return new RequestMessage($id, $method, $param);
     }
