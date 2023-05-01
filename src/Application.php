@@ -5,9 +5,9 @@ namespace SimpleLspServer;
 use Amp\ByteStream\ReadableResourceStream;
 use Amp\ByteStream\WritableResourceStream;
 use SimpleLspServer\Commands\CommandInterface;
+use SimpleLspServer\Commands\DocumentHighlightCommand;
 use SimpleLspServer\Commands\InitializeCommand;
 use SimpleLspServer\Commands\InitializedCommand;
-use SimpleLspServer\Commands\ProgressCommand;
 use SimpleLspServer\Entity\RequestMessage;
 use SimpleLspServer\Parser\LspMessageReader;
 
@@ -19,6 +19,7 @@ class Application
     public array $commands  = [
     'initialize' => InitializeCommand::class,
     'initialized' => InitializedCommand::class,
+    'textDocument/documentHighlight' => DocumentHighlightCommand::class,
     ];
 
     public function __construct()
@@ -53,7 +54,7 @@ class Application
             $command  = $this->route($requestMessage);
             if ($command !== null) {
                 $this->log($chunk, 'input');
-                $this->sendMessage($command->execute($requestMessage->params));
+                $this->sendMessage($command->execute($requestMessage));
             } else {
                 $this->log($chunk, 'not-anwer');
             }
@@ -67,7 +68,7 @@ class Application
             exit();
         }
         if ($method === "") {
-            return new ProgressCommand();
+            return null;
         }
 
         if (array_key_exists($method, $this->commands)) {

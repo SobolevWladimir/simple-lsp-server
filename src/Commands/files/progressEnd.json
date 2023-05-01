@@ -4,10 +4,8 @@
   "params": {
     "token": "ddb1a990-afff-409d-b7c5-8be90bcb43a5",
     "value": {
-      "kind": "begin",
-      "title": "Indexing workspace",
-      "message": "2 PHP files",
-      "percentage": 0
+      "kind": "end",
+      "message": "Done indexing (0.04s, 29\/1,611 mb), watching with pattern matching buffered inotify"
     }
   }
 }

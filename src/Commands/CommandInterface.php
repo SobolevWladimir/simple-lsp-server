@@ -2,7 +2,9 @@
 
 namespace SimpleLspServer\Commands;
 
+use SimpleLspServer\Entity\RequestMessage;
+
 interface CommandInterface
 {
-    public function execute(?array $param): array;
+    public function execute(RequestMessage $message): array;
 }
