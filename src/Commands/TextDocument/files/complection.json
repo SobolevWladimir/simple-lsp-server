@@ -1,0 +1,9 @@
+{
+  "jsonrpc": "2.0",
+  "method": "textDocument\/publishDiagnostics",
+  "params": {
+    "uri": "file:\/\/\/home\/wladimir\/Documents\/projects\/my\/lsp_server\/simple-lsp-server\/src\/Application.php",
+    "version": 11,
+    "diagnostics": []
+  }
+}

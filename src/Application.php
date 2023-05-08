@@ -5,9 +5,10 @@ namespace SimpleLspServer;
 use Amp\ByteStream\ReadableResourceStream;
 use Amp\ByteStream\WritableResourceStream;
 use SimpleLspServer\Commands\CommandInterface;
-use SimpleLspServer\Commands\DocumentHighlightCommand;
+use SimpleLspServer\Commands\TextDocument\DocumentHighlightCommand;
 use SimpleLspServer\Commands\InitializeCommand;
 use SimpleLspServer\Commands\InitializedCommand;
+use SimpleLspServer\Commands\TextDocument\ComplectionCommand;
 use SimpleLspServer\Entity\RequestMessage;
 use SimpleLspServer\Parser\LspMessageReader;
 
@@ -20,6 +21,7 @@ class Application
     'initialize' => InitializeCommand::class,
     'initialized' => InitializedCommand::class,
     'textDocument/documentHighlight' => DocumentHighlightCommand::class,
+    'textDocument/completion' => ComplectionCommand::class,
     ];
 
     public function __construct()
