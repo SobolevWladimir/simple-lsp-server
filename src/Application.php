@@ -5,6 +5,7 @@ namespace SimpleLspServer;
 use Amp\ByteStream\ReadableResourceStream;
 use Amp\ByteStream\WritableResourceStream;
 use SimpleLspServer\Commands\CommandInterface;
+use SimpleLspServer\Commands\TextDocument\CodeActionCommand;
 use SimpleLspServer\Commands\TextDocument\DocumentHighlightCommand;
 use SimpleLspServer\Commands\InitializeCommand;
 use SimpleLspServer\Commands\InitializedCommand;
@@ -18,10 +19,16 @@ class Application
     public WritableResourceStream $output ;
 
     public array $commands  = [
+    '' => null,
     'initialize' => InitializeCommand::class,
     'initialized' => InitializedCommand::class,
+    'shutdown' => null,
+    'textDocument/didOpen' => null,
+    'textDocument/didChange' => null,
     'textDocument/documentHighlight' => DocumentHighlightCommand::class,
     'textDocument/completion' => ComplectionCommand::class,
+    '$/cancelRequest' => null,
+    'textDocument/codeAction' => CodeActionCommand::class,
     ];
 
     public function __construct()
@@ -51,33 +58,38 @@ class Application
     {
         $reader  = new LspMessageReader($chunk);
         $message = $reader->parse();
-        if (null != $message) {
-            $requestMessage  = $message->toRequestMessage();
+        if (null === $message) {
+            return;
+        }
+
+        $requestMessage  = $message->toRequestMessage();
+        try {
             $command  = $this->route($requestMessage);
-            if ($command !== null) {
-                $this->log($chunk, 'input');
-                $this->sendMessage($command->execute($requestMessage));
-            } else {
-                $this->log($chunk, 'not-anwer');
-            }
+        } catch (\Exception $e) {
+            $this->log($chunk, $e->getMessage());
+        }
+
+        if ($command !== null) {
+            $this->log($chunk, 'input');
+            $this->sendMessage($command->execute($requestMessage));
+        } else {
+            $this->log($chunk, 'not-anwer');
         }
     }
 
     private function route(RequestMessage $message): ?CommandInterface
     {
         $method  = $message->method;
-        if ($method == 'shutdown') {
-            exit();
+        if (!array_key_exists($method, $this->commands)) {
+             throw new \Exception('not found answer');
         }
-        if ($method === "") {
+
+        $className  = $this->commands[$method];
+        if ($className == null) {
             return null;
         }
 
-        if (array_key_exists($method, $this->commands)) {
-            $className  = $this->commands[$method];
-             return new $className();
-        }
-
+        return new $className();
         return null;
     }
 
