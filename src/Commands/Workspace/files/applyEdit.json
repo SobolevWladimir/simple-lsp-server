@@ -1,0 +1,11 @@
+{
+  "jsonrpc": "2.0",
+  "id": "45f37bb5-c616-4793-9bad-cdd890221e47",
+  "method": "workspace/applyEdit",
+  "params": {
+    "edit": {
+      "changes": {}
+    },
+    "label": "Apply source code transformation"
+  }
+}

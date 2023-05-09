@@ -3,8 +3,8 @@
   "id": 9,
   "result": [
     {
-      "title": "Fix PSR namespace and class name",
-      "kind": "quickfix.fix_namespace_class_name",
+      "title": "Добавить слово в начало документа",
+      "kind": "quickfix.add_item",
       "diagnostics": [
         {
           "range": {
@@ -19,16 +19,13 @@
           },
           "severity": 2,
           "source": "foofooServerLsp",
-          "message": "Namespace should probably be \"Ep\\Tests\\Safety\\Top\" (fix with \"Fix PSR namespace and class name\" code action)"
+          "message": "Добави слово в начало документа и покажем изменения"
         }
       ],
       "command": {
-        "title": "Fix PSR namespace and class name",
+        "title": "Добавить слово в начале",
         "command": "transform",
-        "arguments": [
-          "file:\/\/\/home\/wladimir\/Documents\/projects\/my\/lsp_server\/simple-lsp-server\/src\/Application.php",
-          "fix_namespace_class_name"
-        ]
+        "arguments": []
       }
     }
   ]

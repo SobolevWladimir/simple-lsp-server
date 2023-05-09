@@ -10,6 +10,7 @@ use SimpleLspServer\Commands\TextDocument\DocumentHighlightCommand;
 use SimpleLspServer\Commands\InitializeCommand;
 use SimpleLspServer\Commands\InitializedCommand;
 use SimpleLspServer\Commands\TextDocument\ComplectionCommand;
+use SimpleLspServer\Commands\Workspace\ApplyEditCommand;
 use SimpleLspServer\Entity\RequestMessage;
 use SimpleLspServer\Parser\LspMessageReader;
 
@@ -24,11 +25,13 @@ class Application
     'initialized' => InitializedCommand::class,
     'shutdown' => null,
     'textDocument/didOpen' => null,
+    'textDocument/didClose' => null,
     'textDocument/didChange' => null,
     'textDocument/documentHighlight' => DocumentHighlightCommand::class,
     'textDocument/completion' => ComplectionCommand::class,
     '$/cancelRequest' => null,
     'textDocument/codeAction' => CodeActionCommand::class,
+    'workspace/executeCommand' => ApplyEditCommand::class,
     ];
 
     public function __construct()

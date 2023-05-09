@@ -33,31 +33,7 @@
       "documentSymbolProvider": true,
       "codeActionProvider": {
         "codeActionKinds": [
-          "refactor.class.simplify",
-          "quickfix.import_class",
-          "quickfix.promote_constructor",
-          "quickfix.promote_constructor_public",
-          "quickfix.complete_constructor",
-          "quickfix.complete_constructor_public",
-          "quickfix.create_class",
-          "quickfix.create_unresolable_class",
-          "quickfix.add_missing_properties",
-          "quickfix.implement_contracts",
-          "quickfix.fix_namespace_class_name",
-          "quickfix.add_missing_docblocks_return",
-          "quickfix.add_missing_params",
-          "quickfix.add_missing_return_types",
-          "quickfix.remove_unused_imports",
-          "quickfix.generate_method",
-          "refactor.extract.method",
-          "refactor.extract.constant",
-          "quickfix.generate_accessors",
-          "quickfix.generate_mutators",
-          "refactor.extract.expression",
-          "quickfix.fill.object",
-          "refactor",
-          "quickfix.generate_decorator",
-          "source.fixAll.phpactor.phpCsFixer"
+          "quickfix.add_item"
         ]
       },
       "workspaceSymbolProvider": true,
@@ -68,19 +44,7 @@
       "selectionRangeProvider": true,
       "executeCommandProvider": {
         "commands": [
-          "name_import",
-          "transform",
-          "create_class",
-          "generate_method",
-          "extract_method",
-          "replace_qualifier_with_import",
-          "extract_constant",
-          "generate_accessors",
-          "generate_mutators",
-          "import_all_unresolved_names",
-          "extract_expression",
-          "generate_decorator",
-          "php_cs_fixer.fix"
+          "transform"
         ]
       },
       "workspace": {
